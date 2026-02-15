@@ -13,7 +13,6 @@ global.owner = ["94766911711"] // Owner number
 global.bot = "94766911711" // Bot number
 global.namabot = "Base-Dxz" // Bot name
 global.namaown = "DanuZz" // Bot owner
-global.anticall = true
 
 //~~~~~Status Updated~~~~~//
 let fs = require('fs')
