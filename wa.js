@@ -41,29 +41,6 @@ const {
     makeCacheableSignalKeyStore
 } = require("bail");
 const axios = require('axios');
-const movanest = "https://i.postimg.cc/kM6XC8X1/main.jpg";
-const footer = "ꔠ Wa - Bot";
-const wagc = "https://whatsapp.com/channel/0029VbBi1x11XquYgICEVB0O";
-const ownercommandekelogoeka = "https://i.ibb.co/ycZ4gqrh/9601.jpg";
-const newOwnLogo = "https://i.postimg.cc/1tz1N69H/Whats-App-Image-2026-01-29-at-5-36-45-PM.jpg";
-const cmdLogo = "https://i.postimg.cc/C1MSHX44/Chat-GPT-Image-Feb-11-2026-06-25-42-PM.png";
-const moment = require('moment-timezone');
-
-const time = moment().tz("Asia/Colombo").format("HH:mm:ss");
-
-let ucapanWaktu;
-
-if (time >= "19:00:00" && time < "23:59:59") {
-    ucapanWaktu = "Good night Sir";
-} else if (time >= "15:00:00" && time < "19:00:00") {
-    ucapanWaktu = "Good afternoon Sir";
-} else if (time >= "11:00:00" && time < "15:00:00") {
-    ucapanWaktu = "Good afternoon Sir";
-} else if (time >= "06:00:00" && time < "11:00:00") {
-    ucapanWaktu = "Good morning Sir";
-} else {
-    ucapanWaktu = "hello";
-}
 
 module.exports = async (Dxz, m) => {
 try {
@@ -114,59 +91,6 @@ const isBotAdmin = participant_bot?.admin !== null ? true : false
 const isAdmin = participant_sender?.admin !== null ? true : false
 const cmd = prefix + command
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-//-------DXZ-EXAMPLE-MODULE---------
-let example = (teks) => {
-return `\n*Example Usage :*\nType *${cmd}* ${teks}\n`
-}
-    
-//----------GET-BUFFER----------
-const getBuffer = async (url, options = {}) => {
-  try {
-    const res = await axios({
-      method: 'get',
-      url,
-      headers: {
-        'DNT': 1,
-        'Upgrade-Insecure-Requests': 1,  // Fixed plural
-        ...options?.headers,  // Safer merge if options has headers
-      },
-      ...options,
-      responseType: 'arraybuffer',
-    });
-    return res.data;
-  } catch (err) {
-    console.error('Failed to fetch buffer:', err);  // Optional logging
-    throw err;  // Or return null; depending on your needs
-  }
-};
-
-//----------IMAGE-FUNC----------
-async function image(url) {
-const { imageMessage } = await generateWAMessageContent({ image: { url },}, {
-  upload: Dxz.waUploadToServer
-  })
-  return imageMessage
-}
-    
- //----------REPLY-FUNC----------
-  const reply = async (teks) => {
-  let res = generateWAMessageFromContent(
-    m.chat,
-    {
-        orderMessage: {
-            productId: "8569472943180260",
-            title: "",
-            description: "Business Bot",
-            currencyCode: "USD",
-            message: teks,
-            priceAmount1000: "91000",
-            thumbnail: await getBuffer(movanest), // Assuming getBuffer can handle URL; adjust if needed
-            surface: '@DanuZz Business Bot', // Use ownername if available, else fallback
-            contextInfo: { mentionedJid: [m.sender] },
-        },
-    }, { quoted: m }); // No quoted message specified; set to null or provide one if needed
-await Dxz.relayMessage(m.chat, res.message, { messageId: res.key.id })}
 
 //~~~~~Case Features~~~~~//
 switch(command) {
