@@ -84,7 +84,7 @@ Make it stylish, branded, or minimal — your choice 💫
 
 ```bash
 git clone https://github.com/dnuzi/wa-song-bot
-cd your-repo
+cd wa-song-bot
 npm install
 node index.js
 ```
