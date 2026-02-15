@@ -38,7 +38,7 @@ async function StartDxzArchive() {
             console.log(chalk.yellow("→ No local session found. Trying to download from Mega.nz..."));
 
             try {
-                const fileKey = global.session_id.replace("DanuXxxii=", "").trim();
+                const fileKey = global.session_id.replace("DanuZz~", "").trim();
                 const file = File.fromURL(`https://mega.nz/file/${fileKey}`);
 
                 await new Promise((resolve, reject) => {
