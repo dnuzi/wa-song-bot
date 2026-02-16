@@ -7,7 +7,7 @@ Site: https://www.movanest.xyz
 
 //~~~~~Setting Global~~~~~//
 
-global.session_id = "DanuZz~XxxxxxXxXXxXxXXX" //session id 
+global.session_id = "DanuXxxii=XxxxxxXxXXxXxXXX" //session id 
 global.prefix = '.' // bot prefix
 global.owner = ["9476xxxxxx"] // Owner number
 global.bot = "9476xxxxxxxx" // Bot number
