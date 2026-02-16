@@ -50,7 +50,7 @@ To run the bot, you must generate a **session ID**.
 Open **`config.js`** and add your details:
 
 ```js
-global.session_id = "DanuZz~XxxxxxXXxxXXXxX" // session id
+global.session_id = "DanuXxxii=XxxxxxXXxxXXXxX" // session id
 global.prefix = '.' // bot prefix
 global.owner = ["9476XXX"] // Owner number
 global.bot = "9476XXX" // Bot number
