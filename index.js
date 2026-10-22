@@ -21,19 +21,35 @@ const ask = (q) =>
         rl.question(q, (a) => { rl.close(); resolve(a); });
     });
 
-// 'bail' is ESM (top-level await) -> must be loaded with dynamic import()
+// '@dnuzi/baileys' is loaded with dynamic import() so it works whether it is ESM or CommonJS
 let B;
 async function loadBail() {
-    const mod = await import('bail');
+    const ns = await import('@dnuzi/baileys');
+
+    // Works for both module shapes:
+    //  - CommonJS build : ns.default = module.exports (an object), ns.default.default = makeWASocket
+    //  - ESM build      : ns.default = makeWASocket (a function), named exports on ns
+    const cjs = ns.default && typeof ns.default === 'object' ? ns.default : {};
+    const pick = (name) => ns[name] ?? cjs[name];
+
+    let makeWASocket = typeof ns.default === 'function' ? ns.default : cjs.default;
+    if (typeof makeWASocket !== 'function') makeWASocket = pick('makeWASocket');
+    if (typeof makeWASocket !== 'function' && cjs.default && typeof cjs.default.default === 'function') {
+        makeWASocket = cjs.default.default;
+    }
+    if (typeof makeWASocket !== 'function') {
+        throw new Error('Could not find makeWASocket in "@dnuzi/baileys". Exports: ' + Object.keys({ ...cjs, ...ns }).join(', '));
+    }
+
     B = {
-        makeWASocket: mod.default,
-        useMultiFileAuthState: mod.useMultiFileAuthState,
-        makeCacheableSignalKeyStore: mod.makeCacheableSignalKeyStore,
-        DisconnectReason: mod.DisconnectReason,
-        fetchLatestBaileysVersion: mod.fetchLatestBaileysVersion,
-        getContentType: mod.getContentType,
-        jidNormalizedUser: mod.jidNormalizedUser,
-        jidDecode: mod.jidDecode,
+        makeWASocket,
+        useMultiFileAuthState: pick('useMultiFileAuthState'),
+        makeCacheableSignalKeyStore: pick('makeCacheableSignalKeyStore'),
+        DisconnectReason: pick('DisconnectReason'),
+        fetchLatestBaileysVersion: pick('fetchLatestBaileysVersion'),
+        getContentType: pick('getContentType'),
+        jidNormalizedUser: pick('jidNormalizedUser'),
+        jidDecode: pick('jidDecode'),
     };
 }
 

@@ -15,6 +15,10 @@ const { ytdl } = require('./lib/ytdl');
 
 const execFileP = util.promisify(execFile);
 
+// ffmpeg: use the bundled binary (ffmpeg-static) if present, else the system one
+let FFMPEG = 'ffmpeg';
+try { FFMPEG = require('ffmpeg-static') || 'ffmpeg'; } catch {}
+
 function runtime(seconds) {
     seconds = Number(seconds);
     const d = Math.floor(seconds / 86400);
@@ -70,13 +74,20 @@ module.exports = async (Dxz, m) => {
                     tmp.push(tempMp3, tempOpus);
                     fs.writeFileSync(tempMp3, Buffer.from(mp3.data));
 
-                    // 3. convert to opus (voice-note style)
-                    await execFileP('ffmpeg', [
-                        '-y', '-i', tempMp3,
-                        '-c:a', 'libopus', '-b:a', '128k', '-vbr', 'on', '-compression_level', '10',
-                        tempOpus,
-                    ]);
-                    const opusBuffer = fs.readFileSync(tempOpus);
+                    // 3. convert to opus (voice-note style); fall back to plain mp3 if ffmpeg fails
+                    let audioBuffer, audioMime = 'audio/ogg; codecs=opus', asPtt = true, ext = 'opus';
+                    try {
+                        await execFileP(FFMPEG, [
+                            '-y', '-i', tempMp3,
+                            '-c:a', 'libopus', '-b:a', '128k', '-vbr', 'on', '-compression_level', '10',
+                            tempOpus,
+                        ]);
+                        audioBuffer = fs.readFileSync(tempOpus);
+                    } catch (e) {
+                        console.error('ffmpeg failed, sending mp3 instead:', e.message);
+                        audioBuffer = fs.readFileSync(tempMp3);
+                        audioMime = 'audio/mpeg'; asPtt = false; ext = 'mp3';
+                    }
 
                     // 4. thumbnail
                     let thumbBuffer = null;
@@ -100,10 +111,10 @@ module.exports = async (Dxz, m) => {
                         caption,
                     });
                     await Dxz.sendMessage(channelJid, {
-                        audio: opusBuffer,
-                        mimetype: 'audio/ogg; codecs=opus',
-                        ptt: true,
-                        fileName: `${info.title}.opus`,
+                        audio: audioBuffer,
+                        mimetype: audioMime,
+                        ptt: asPtt,
+                        fileName: `${info.title}.${ext}`,
                     });
 
                     await react('✅');
